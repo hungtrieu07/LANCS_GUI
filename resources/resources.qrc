@@ -1,0 +1,111 @@
+<RCC>
+  <qresource prefix="Menu">
+    <file>icons/menu.png</file>
+  </qresource>
+  <qresource prefix="Tick">
+    <file>icons/correct.png</file>
+  </qresource>
+  <qresource prefix="Exit">
+    <file>icons/power-off.png</file>
+  </qresource>
+  <qresource prefix="App_Icon">
+    <file>icons/car.ico</file>
+  </qresource>
+  <qresource prefix="Register">
+    <file>icons/register.png</file>
+  </qresource>
+  <qresource prefix="Play_Live">
+    <file>icons/play_button.png</file>
+  </qresource>
+  <qresource prefix="Stop_Live">
+    <file>icons/stop_button.png</file>
+  </qresource>
+  <qresource prefix="Server">
+    <file>icons/servers.png</file>
+  </qresource>
+  <qresource prefix="Open">
+    <file>icons/open_folder.png</file>
+  </qresource>
+  <qresource prefix="Select_ROI">
+    <file>icons/select_roi.png</file>
+  </qresource>
+  <qresource prefix="Execute">
+    <file>icons/execute.png</file>
+  </qresource>
+  <qresource prefix="Loading">
+    <file>icons/loading.gif</file>
+  </qresource>
+  <qresource prefix="Save">
+    <file>icons/save.png</file>
+  </qresource>
+  <qresource prefix="Setting">
+    <file>icons/setting.png</file>
+  </qresource>
+  <qresource prefix="Overspeed">
+    <file>icons/overspeed.png</file>
+  </qresource>
+  <qresource prefix="Abnormal">
+    <file>icons/abnormal.png</file>
+  </qresource>
+  <qresource prefix="Opposite_Direction">
+    <file>icons/opposite_direction.png</file>
+  </qresource>
+  <qresource prefix="No_Motorbike">
+    <file>icons/no_motorbike.png</file>
+  </qresource>
+  <qresource prefix="Person">
+    <file>icons/person.png</file>
+  </qresource>
+  <qresource prefix="Stop">
+    <file>icons/stop.png</file>
+  </qresource>
+  <qresource prefix="Refresh">
+    <file>icons/refresh.png</file>
+  </qresource>
+  <qresource prefix="DeleteAll">
+    <file>icons/delete_all.png</file>
+  </qresource>
+  <qresource prefix="Violation">
+    <file>icons/violation.png</file>
+  </qresource>
+  <qresource prefix="Clean">
+    <file>icons/clean.png</file>
+  </qresource>
+  <qresource prefix="Escape">
+    <file>icons/escape.png</file>
+  </qresource>
+  <qresource prefix="LeftArrow">
+    <file>icons/arrow-left.png</file>
+  </qresource>
+  <qresource prefix="RightArrow">
+    <file>icons/arrow-right.png</file>
+  </qresource>
+  <qresource prefix="GridLayout">
+    <file>icons/grid_layout_comp_2.png</file>
+    <file>icons/grid_layout_2.png</file>
+    <file>icons/grid_layout_comp.png</file>
+    <file>icons/grid_layout.png</file>
+  </qresource>
+  <qresource prefix="Add">
+    <file>icons/add.png</file>
+  </qresource>
+  <qresource prefix="Delete">
+    <file>icons/minimize-sign.png</file>
+  </qresource>
+  <qresource prefix="LiveStream">
+    <file>icons/live-streaming.png</file>
+  </qresource>
+  <qresource prefix="Tables">
+    <file>icons/tables.png</file>
+  </qresource>
+  <qresource prefix="Chart">
+    <file>icons/bar-graph.png</file>
+  </qresource>
+  <qresource prefix="About">
+    <file>icons/about.png</file>
+  </qresource>
+  <qresource prefix="Password">
+    <file>icons/view.png</file>
+    <file>icons/hide.png</file>
+  </qresource>
+</RCC>

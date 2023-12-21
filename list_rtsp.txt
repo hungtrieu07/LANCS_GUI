@@ -1,0 +1,11 @@
+rtsp://admin:abcd1234@222.252.97.113:8001/h264_stream
+rtsp://admin:abcd1234@222.252.97.113:8002/h264_stream
+rtsp://admin:abcd1234@222.252.97.113:8003/h264_stream
+rtsp://admin:abcd1234@222.252.97.113:8004/h264_stream
+rtsp://admin:abcd1234@222.252.97.113:8005/h264_stream
+rtsp://admin:abcd1234@222.252.97.113:8006/h264_stream
+rtsp://admin:abcd1234@222.252.97.113:8007/h264_stream
+rtsp://admin:abcd1234@222.252.97.113:8008/h264_stream
+rtsp://admin:abcd1234@222.252.97.113:8009/h264_stream
+rtsp://admin:abcd1234@222.252.97.113:8010/h264_stream
+rtsp://admin:abcd1234@222.252.97.113:8011/h264_stream
