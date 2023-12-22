@@ -1,6 +1,5 @@
 import re
 import sys
-# import bcrypt
 
 # from pymongo import MongoClient, errors
 from pymilvus import connections, db, exceptions
@@ -8,14 +7,16 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QKeyEvent
 from PyQt5.QtWidgets import QApplication
+from pymongo import MongoClient, errors
 import requests
 from requests.exceptions import ConnectionError
 
 from src.ai_module import AI
 # from src.chartWidgetFunctions import ChartWidgetFunctions
+# from src.registerFunctions import RegisterFunctions
+from src.setupWidgetFunctions import SetupWidgetFunction
 from src.livestreamFunctions import LiveStreamFunctions
 # from src.settingWidgetFunction import SettingWidgetFunction
-from src.setupWidgetFunctions import SetupWidgetFunction
 from src.violation import ViolationFunction
 from ui.ui_functions import UIFunctions
 from ui.ui_mainwindow import Ui_MainWindow
@@ -40,11 +41,12 @@ class MainWindow(QtWidgets.QMainWindow):
     @QtCore.pyqtSlot(str)
     def recv_text(self, text):
         try:
-            conn = connections.connect(host=f'{text}', port=19530)
-            print(db.list_database())
-            # client = MongoClient(f"mongodb://{text}:9999", serverSelectionTimeoutMS=5000)
-            # self.db = client["vehicles_db"]
-            # self.db.list_collection_names()
+            # conn = connections.connect(host=f'{text}', port=19530)
+            # self.database = db.list_database()
+            # print(self.database)
+            client = MongoClient(f"mongodb://{text}:9999", serverSelectionTimeoutMS=5000)
+            self.db = client["vehicles_db"]
+            self.db.list_collection_names()
 
             ip_address = self.ui.comboBoxServerIP.currentText()
 
@@ -84,14 +86,14 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.btnMenu.toggled.connect(self.ui_functions.toggleMenu)
             self.ui.btnSetupPage.toggled.connect(self.ui_functions.toggleSetup)
             self.ui.btnLiveStreamPage.toggled.connect(self.ui_functions.toggleLiveStream)
-            self.ui.btnChartPage.toggled.connect(self.ui_functions.toggleChart)
-            self.ui.btnViolationPage.toggled.connect(self.ui_functions.toggleViolation)
-            self.ui.btnSettingPage.toggled.connect(self.ui_functions.toggleSetting)
+            # self.ui.btnChartPage.toggled.connect(self.ui_functions.toggleChart)
+            # self.ui.btnViolationPage.toggled.connect(self.ui_functions.toggleViolation)
+            # self.ui.btnSettingPage.toggled.connect(self.ui_functions.toggleSetting)
 
             # Emit data from setup page to livestream page
             self.setup_functions.send_table_data.connect(self.livestream_funcs.recv_table_data)
             self.setup_functions.send_remove_cam_signal.connect(self.livestream_funcs.recv_remove_cam_signal)
-            self.setup_functions.send_cam_names.connect(self.setting_functions.receive_cam_names)
+            # self.setup_functions.send_cam_names.connect(self.setting_functions.receive_cam_names)
 
             # Emit data from livestream page to setup page
             self.livestream_funcs.send_camera_update_status.connect(self.setup_functions.recv_camera_status)
@@ -100,38 +102,38 @@ class MainWindow(QtWidgets.QMainWindow):
 
             # Buttons in setup page
             self.ui.btnAddRow.clicked.connect(self.setup_functions.on_addDataClicked)
-            self.ui.btnAddRow.clicked.connect(self.setting_functions.on_addDataClicked)
+            # self.ui.btnAddRow.clicked.connect(self.setting_functions.on_addDataClicked)
             self.ui.btnDelRow.clicked.connect(self.setup_functions.on_deleteDataClicked)
 
             self.ui.btnOpenFile.clicked.connect(self.setup_functions.on_openFile)
             self.ui.btnOpenFile.clicked.connect(self.setup_functions.on_initButtonClicked)
             self.ui.btnExportFile.clicked.connect(self.setup_functions.on_writeExcelClicked)
             self.ui.btnSelectROI.clicked.connect(self.setup_functions.on_selectROI)
-            self.ui.btnLive.clicked.connect(self.setting_functions.send_setting_data_to_AI)
+            # self.ui.btnLive.clicked.connect(self.setting_functions.send_setting_data_to_AI)
             self.ui.btnLive.clicked.connect(self.setup_functions.on_LiveStreamClicked)
 
-            self.ui.SettingExportBtn.clicked.connect(self.setting_functions.on_writeConfigFileClicked)
-            self.ui.SettingOpenBtn.clicked.connect(self.setting_functions.on_openConfigFileClicked)
-            self.ui.saveCamCnfWhenRunBtn.clicked.connect(self.setting_functions.send_setting_data_to_AI)
+            # self.ui.SettingExportBtn.clicked.connect(self.setting_functions.on_writeConfigFileClicked)
+            # self.ui.SettingOpenBtn.clicked.connect(self.setting_functions.on_openConfigFileClicked)
+            # self.ui.saveCamCnfWhenRunBtn.clicked.connect(self.setting_functions.send_setting_data_to_AI)
 
             # Change grid layout button in livestream page
             self.ui.btnCompactLS.toggled.connect(self.livestream_funcs.toggleCompactMode)
 
             # Search field in setup page
-            self.ui.tableFieldCB.addItems(self.setup_functions.setupModel.dataframe.columns)
+            # self.ui.tableFieldCB.addItems(self.setup_functions.setupModel.dataframe.columns)
             self.ui.tableFieldCB.currentIndexChanged.connect(self.setup_functions.filterColumnSearch)
             self.ui.tableSearch.textChanged.connect(self.setup_functions.update_search)
             self.ui.labelLoading.setVisible(False)
 
-            self.ui.btnFilter.clicked.connect(self.chart_functions.on_FilterClicked)
+            # self.ui.btnFilter.clicked.connect(self.chart_functions.on_FilterClicked)
             self.ui.btnFilterVio.clicked.connect(self.violation_functions.on_FilterClicked)
             self.ui.tableFieldCB_Vio.addItems(self.violation_functions.get_columns())
             self.ui.tableFieldCB_Vio.currentIndexChanged.connect(self.violation_functions.filterColumnSearch)
             self.ui.tableSearch_Vio.textChanged.connect(self.violation_functions.update_search)
             self.violation_functions.send_display_image_error.connect(self.recv_display_image_error)
 
-            self.setting_functions.send_setting_table.connect(self.ai_functions.recv_setting_data)
-        except exceptions.MilvusException:
+            # self.setting_functions.send_setting_table.connect(self.ai_functions.recv_setting_data)
+        except errors.ServerSelectionTimeoutError:
             QtWidgets.QMessageBox.critical(self, "ERROR", "Kết nối tới server thất bại!")
         
 
@@ -154,8 +156,11 @@ class MainWindow(QtWidgets.QMainWindow):
             "Bạn có muốn thoát chương trình?",
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
         if ret == QtWidgets.QMessageBox.Yes:
-            self.livestream_funcs.remove_all_cameras()
-            self.close()
+            if hasattr(self, 'livestream_funcs') and self.livestream_funcs is not None:
+                self.livestream_funcs.remove_all_cameras()
+                self.close()
+            else:
+                self.close()
 
 
 if __name__ == '__main__':

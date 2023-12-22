@@ -6,46 +6,34 @@ from ui.ui_mainwindow import Ui_MainWindow
 class UIFunctions:
     def __init__(self, parent):
         self.ui: Ui_MainWindow = parent
+        
+    def toggleRegister(self, state: bool):
+        if state:
+            self.ui.stackedWidget.setCurrentWidget(self.ui.RegisterWidget)
+            self.ui.btnSetupPage.setChecked(False)
+            self.ui.btnLiveStreamPage.setChecked(False)
+            self.ui.btnViolationPage.setChecked(False)
 
     def toggleSetup(self, state: bool):
         if state:
             self.ui.stackedWidget.setCurrentWidget(self.ui.setupWidget)
             self.ui.btnLiveStreamPage.setChecked(False)
-            self.ui.btnChartPage.setChecked(False)
+            self.ui.btnRegisterUserPage.setChecked(False)
             self.ui.btnViolationPage.setChecked(False)
-            self.ui.btnSettingPage.setChecked(False)
 
     def toggleLiveStream(self, state: bool):
         if state:
             self.ui.stackedWidget.setCurrentWidget(self.ui.livestreamWidget)
+            self.ui.btnRegisterUserPage.setChecked(False)
             self.ui.btnSetupPage.setChecked(False)
-            self.ui.btnChartPage.setChecked(False)
             self.ui.btnViolationPage.setChecked(False)
-            self.ui.btnSettingPage.setChecked(False)
-
-    def toggleChart(self, state: bool):
-        if state:
-            self.ui.stackedWidget.setCurrentWidget(self.ui.chartWidget)
-            self.ui.btnSetupPage.setChecked(False)
-            self.ui.btnLiveStreamPage.setChecked(False)
-            self.ui.btnViolationPage.setChecked(False)
-            self.ui.btnSettingPage.setChecked(False)
 
     def toggleViolation(self, state: bool):
         if state:
             self.ui.stackedWidget.setCurrentWidget(self.ui.violationWidget)
             self.ui.btnSetupPage.setChecked(False)
             self.ui.btnLiveStreamPage.setChecked(False)
-            self.ui.btnChartPage.setChecked(False)
-            self.ui.btnSettingPage.setChecked(False)
-            
-    def toggleSetting(self, state: bool):
-        if state:
-            self.ui.stackedWidget.setCurrentWidget(self.ui.settingWidget)
-            self.ui.btnSetupPage.setChecked(False)
-            self.ui.btnLiveStreamPage.setChecked(False)
-            self.ui.btnChartPage.setChecked(False)
-            self.ui.btnViolationPage.setChecked(False)
+            self.ui.btnRegisterUserPage.setChecked(False)
 
     def toggleMenu(self, state: bool):
         if not state:

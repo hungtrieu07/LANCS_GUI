@@ -144,10 +144,10 @@ class ViolationFunction(ViolationFilterBar):
         
         self.name_to_pos = {}
         
-        for index in range(self.ui.gridLayout_2.count()):
-            widget = self.ui.gridLayout_2.itemAt(index).widget()
-            pos = self.ui.gridLayout_2.getItemPosition(index)
-            self.name_to_pos[widget.objectName()] = pos
+        # for index in range(self.ui.gridLayout_2.count()):
+        #     widget = self.ui.gridLayout_2.itemAt(index).widget()
+        #     pos = self.ui.gridLayout_2.getItemPosition(index)
+        #     self.name_to_pos[widget.objectName()] = pos
 
         self.collection = self.db["violation_vehicles"]
 

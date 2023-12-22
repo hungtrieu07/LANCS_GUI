@@ -18,3 +18,7 @@ videos
 *.dat
 setup.ifp
 .vscode
+*.mp4
+*.jpg
+test_*.py
+
