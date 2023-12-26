@@ -44,9 +44,6 @@ class Worker(QtCore.QThread):
         self.mutex = mutex
         self.wait_condition = wait_condition
 
-        self.frame_skip_count = 0
-        self.frame_skip_interval = 2
-
     def reinit_params(self, data: dict):
         self.name = data["CAM NAME"]
         self.ip = data["IP"]
@@ -65,13 +62,13 @@ class Worker(QtCore.QThread):
                 cap.release()
                 self.error_occurred.emit(f"Camera {self.name} không thể mở!")
                 return
-        except Exception as e:
+        except cv2.error as e:
             cap.release()
             self.error_occurred.emit(f"Có lỗi xảy ra: {str(e)}")
             self.finished.emit()
         finally:
             self.send_update_status.emit(self.name, cap.isOpened())
-            
+
             width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
@@ -107,19 +104,13 @@ class Worker(QtCore.QThread):
                 cv2.fillPoly(mask, [pts], (255, 255, 255))
                 img = cv2.bitwise_and(img, mask)
 
-                if (
-                    not self.pause
-                    and self.frame_skip_count % self.frame_skip_interval == 0
-                ):
+                if not self.pause:
                     self.mutex.lock()
                     self.send_frame.emit(frame)  # Send the last frame if interrupted
-                    self.wait_condition.wait(self.mutex, 80)
+                    self.wait_condition.wait(self.mutex, 50)
                     self.mutex.unlock()
                     last_frame = frame
                 self.send_data_to_consumer.emit(self.data, img, self.violation_frame)
-
-                self.frame_skip_count += 1
-                # self.spin(0.08)
 
             cap.release()
             self._interupted = True
@@ -146,7 +137,7 @@ class Worker(QtCore.QThread):
                     self.run()  # Restart the run loop
                     break
 
-            except Exception as e:
+            except cv2.error as e:
                 QtWidgets.QMessageBox.critical(
                     self.p, "ERROR", "Có lỗi xảy ra: " + str(e)
                 )
@@ -199,10 +190,7 @@ class CameraWidget(QtWidgets.QWidget):
         self.setMinimumSize(QtCore.QSize(480, 270))
         self.setLayout(self.vlayout)
 
-        self.image_buffer = []
-
     def start(self):
-        self.frame_counter = 0
         self.worker.start()
 
     def isRunning(self) -> bool:
@@ -233,14 +221,5 @@ class CameraWidget(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot(np.ndarray)
     def update_frame(self, frame: np.ndarray):
-        self.image_buffer.append(frame)
-
-        max_buffer_size = 5
-        if len(self.image_buffer) > max_buffer_size:
-            self.image_buffer.pop(0)
-
-        if len(self.image_buffer) > 0 and self.frame_counter % 3 == 0:
-            pixmap = self.convert_cv_qt(self.image_buffer[-1])
-            self.CamLabel.setPixmap(pixmap)
-
-        self.frame_counter += 1
+        pixmap = self.convert_cv_qt(frame)
+        self.CamLabel.setPixmap(pixmap)

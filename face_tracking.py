@@ -1,26 +1,24 @@
-# from TFLiteFaceDetector import UltraLightFaceDetecion
+import asyncio
 import datetime
-from io import BytesIO
+import json
 import os
+import queue
 import time
-from PIL import Image
+import traceback
+from io import BytesIO
 
 import cv2
+import httpx
 import numpy as np
 import requests
 from deep_sort import nn_matching
 from deep_sort.detection import Detection
 from deep_sort.tracker import Tracker
-
-# from face_fer import FER
-# from mtcnn import MTCNN
-# from infer_resnet import Arcface_Resnet
 from numpy.linalg import norm
-import traceback
+from PIL import Image
 
-# from predictor_v8 import Detect_v8
-# from retinaface.pre_trained_models import get_model
-# from tracker.byte_tracker import BYTETracker
+frame_queue = queue.Queue()
+expression_task_last_run = 0
 
 Frame_rate = 1
 # calculate cosine distance metric
@@ -31,6 +29,28 @@ metric = nn_matching.NearestNeighborDistanceMetric(
 )
 # initialize tracker
 tracker = Tracker(metric)
+
+def connect_to_video(video_path):
+    cap = cv2.VideoCapture(video_path)
+    if cap.isOpened():
+        print("Connected to video stream")
+        return cap
+
+async def async_request(url, data):
+    async with httpx.AsyncClient() as client:
+        response = await client.post(url, data=data)
+        return response
+
+
+async def run_expression_task():
+    expression_response = await async_request(
+        "http://10.37.239.102:8090/predictions/FaceExpression",
+        data=post_image,
+    )
+
+    expression = json.loads(expression_response.text)
+    expression = expression['output']
+    print(expression)
 
 
 def get_area_detect(img, points):
@@ -99,15 +119,11 @@ def convert_frame(frame):
 
 if __name__ == "__main__":
     video_path = "rtsp://admin:abcd1234@222.252.97.113:8008/h264_stream"
-
     cap = cv2.VideoCapture(video_path)
     frame_width = int(cap.get(3))
     frame_height = int(cap.get(4))
-
     size = (frame_width, frame_height)
-    result = cv2.VideoWriter(
-        "result.mp4", cv2.VideoWriter_fourcc(*"MP4V"), 20, size
-    )
+    result = cv2.VideoWriter("result.mp4", cv2.VideoWriter_fourcc(*"MP4V"), 20, size)
 
     emb_db = "deep_sort/emb_db"
     database = []
@@ -118,10 +134,16 @@ if __name__ == "__main__":
         data = np.load(file_path)
         id = file.split(".")[0]
         database.append([id, data])
+
     try:
+        frame_count = 0
+        expression_task_last_run = 0
+
         while True:
             ret, frame = cap.read()
             if ret:
+                frame_count += 1
+
                 pts = np.array(
                     [
                         [0, frame_height / 2 - 90],
@@ -133,43 +155,49 @@ if __name__ == "__main__":
                 )
                 # crop frame
                 img_croped = get_area_detect(frame, pts)
-                step = time.time()
                 post_image = convert_frame(frame)
 
-                face_detector = requests.post(
-                    "http://10.37.239.102:8090/predictions/FaceDetection",
-                    data=post_image,
-                )
-                face_recognizer = requests.post(
-                    "http://10.37.239.102:8090/predictions/FaceRecognition",
-                    data=post_image,
-                )
-                face_expression = requests.post(
-                    "http://10.37.239.102:8090/predictions/FaceExpression",
-                    data=post_image,
-                )
+                if frame_count <= 20 or frame_count % 1000 == 0:
+                    loop = asyncio.get_event_loop()
+                    results = loop.run_until_complete(
+                        asyncio.gather(
+                            async_request(
+                                "http://10.37.239.102:8090/predictions/FaceDetection",
+                                data=post_image,
+                            ),
+                            async_request(
+                                "http://10.37.239.102:8090/predictions/FaceRecognition",
+                                data=post_image,
+                            ),
+                        )
+                    )
 
-                print("FACE DETECTION:")
-                face_detection_result = face_detector.json()
-                outputs = face_detection_result[0]["output"]
-                boxes = face_detection_result[0]["bbox"]
-                scores = face_detection_result[0]["score"]
-                print(outputs, boxes, scores)
+                    # Wait for all requests to finish
+                    face_detector_result = results[0].json()
+                    face_recognizer_result = results[1].json()
 
-                print("FACE RECOGNITION:")
-                face_recognizer_result = (
-                    face_recognizer.json()
-                )  ### RETURN EMBEDDING VECTOR
-                emb = face_recognizer_result["output"]
-                print(emb)
+                    outputs = face_detector_result[0]["output"]
+                    boxes = face_detector_result[0]["bbox"]
+                    scores = face_detector_result[0]["score"]
 
-                print("FACE EXPRESSION:")
-                face_expression_result = face_expression.json()
-                expression = face_expression_result["output"]
-                print(expression)
+                    ### RETURN EMBEDDING VECTOR
+                    emb = face_recognizer_result["output"]
 
-                Frame_rate = int(1 / (time.time() - step))
-                # print("FPS:",(1/(time.time()-step)))
+                if frame_count <= 20 or time.time() - expression_task_last_run >= 300:  # 5 minutes
+                    # Run expression task
+                    expression_task_last_run = time.time()
+                    loop = asyncio.get_event_loop()
+                    expression_result = loop.run_until_complete(
+                        asyncio.gather(
+                            async_request(
+                                "http://10.37.239.102:8090/predictions/FaceExpression",
+                                data=post_image,
+                            )
+                        )
+                    )
+                    
+                    expression = expression_result[0].json()['output']
+
                 height, width = frame.shape[:2]
                 output = []
                 filter_class = [0]
@@ -192,7 +220,7 @@ if __name__ == "__main__":
 
                 tracker.predict()
                 tracker.update(dets)
-                
+
                 # update tracks
                 for track, ex in zip(tracker.tracks, fers):
                     if not track.is_confirmed() or track.time_since_update > 1:
@@ -225,12 +253,17 @@ if __name__ == "__main__":
                         (255, 255, 255),
                         2,
                     )
-                    
+
                 result.write(frame)
+                del frame
+            else:
+                print("Reconnecting to video...")
+                cap.release()
+                cap = connect_to_video(video_path)
 
     except Exception:
-        print(traceback.print_exc())
-        # pass,
-        # cap.release()
-        # result.release()
-        
+        traceback.print_exc()
+        pass
+    finally:
+        cap.release()
+        result.release()

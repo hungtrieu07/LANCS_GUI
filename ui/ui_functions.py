@@ -9,7 +9,7 @@ class UIFunctions:
         
     def toggleRegister(self, state: bool):
         if state:
-            self.ui.stackedWidget.setCurrentWidget(self.ui.RegisterWidget)
+            self.ui.stackedWidget.setCurrentWidget(self.ui.registerWidget)
             self.ui.btnSetupPage.setChecked(False)
             self.ui.btnLiveStreamPage.setChecked(False)
             self.ui.btnViolationPage.setChecked(False)

@@ -179,26 +179,26 @@ class ROI_Hook(Hooks):
                 roi_selector.image_arr,
                 roi_selector.cv_norm_point_to_lst(self.roi_points),
             )
-            if not self.MODE_EDIT:
-                lst_lane, check_ss = self.detector.auto_lane(
-                    roi_selector.image_arr,
-                    roi_selector.cv_norm_point_to_lst(self.roi_points),
-                    num_lane=2,
-                )
+            # if not self.MODE_EDIT:
+            #     lst_lane, check_ss = self.detector.auto_lane(
+            #         roi_selector.image_arr,
+            #         roi_selector.cv_norm_point_to_lst(self.roi_points),
+            #         num_lane=2,
+            #     )
 
-                if len(self.lane_points) <= 0:
-                    self.lane_points = self.cv_lst_norm_to_qp(
-                        lst_lane,
-                        width=roi_selector.rect().width(),
-                        height=roi_selector.rect().height(),
-                    )
+            #     if len(self.lane_points) <= 0:
+            #         self.lane_points = self.cv_lst_norm_to_qp(
+            #             lst_lane,
+            #             width=roi_selector.rect().width(),
+            #             height=roi_selector.rect().height(),
+            #         )
 
-                if len(self.lane_check_ss) <= 0:
-                    self.lane_check_ss = self.cv_lst_norm_to_qp(
-                        check_ss,
-                        width=roi_selector.rect().width(),
-                        height=roi_selector.rect().height(),
-                    )
+            #     if len(self.lane_check_ss) <= 0:
+            #         self.lane_check_ss = self.cv_lst_norm_to_qp(
+            #             check_ss,
+            #             width=roi_selector.rect().width(),
+            #             height=roi_selector.rect().height(),
+            #         )
 
             if len(self.lane_points) > 0:
                 for qp_pair in self.lane_points:
