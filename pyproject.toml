@@ -6,9 +6,10 @@ build-backend = "setuptools.build_meta"
 name = "VDS"
 version = "1.1"
 authors = [
-    {name = "Trieu Viet Hung", email = "hungtrieu0701@gmail.com"},
+    {name = "Trieu Viet Hung", email = "hungtv@aiacademy.edu.vn"},
+    {name = "Vu Lam Nguyen", email = "nguyenvl@aiacademy.edu.vn"}
 ]
-description = "VDS"
+description = "LANCS"
 requires-python = "==3.8.*"
 
 dependencies = [

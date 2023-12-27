@@ -9,7 +9,7 @@
     <file>icons/power-off.png</file>
   </qresource>
   <qresource prefix="App_Icon">
-    <file>icons/car.ico</file>
+    <file>icons/app.ico</file>
   </qresource>
   <qresource prefix="Register">
     <file>icons/register.png</file>
@@ -23,6 +23,12 @@
   <qresource prefix="Server">
     <file>icons/servers.png</file>
   </qresource>
+  <qresource prefix="Sleep">
+    <file>icons/sleep.png</file>
+  </qresource>
+  <qresource prefix="Using_Phone">
+    <file>icons/using-phone.png</file>
+  </qresource>
   <qresource prefix="Open">
     <file>icons/open_folder.png</file>
   </qresource>
@@ -32,32 +38,11 @@
   <qresource prefix="Execute">
     <file>icons/execute.png</file>
   </qresource>
-  <qresource prefix="Loading">
-    <file>icons/loading.gif</file>
-  </qresource>
   <qresource prefix="Save">
     <file>icons/save.png</file>
   </qresource>
   <qresource prefix="Setting">
     <file>icons/setting.png</file>
-  </qresource>
-  <qresource prefix="Overspeed">
-    <file>icons/overspeed.png</file>
-  </qresource>
-  <qresource prefix="Abnormal">
-    <file>icons/abnormal.png</file>
-  </qresource>
-  <qresource prefix="Opposite_Direction">
-    <file>icons/opposite_direction.png</file>
-  </qresource>
-  <qresource prefix="No_Motorbike">
-    <file>icons/no_motorbike.png</file>
-  </qresource>
-  <qresource prefix="Person">
-    <file>icons/person.png</file>
-  </qresource>
-  <qresource prefix="Stop">
-    <file>icons/stop.png</file>
   </qresource>
   <qresource prefix="Refresh">
     <file>icons/refresh.png</file>

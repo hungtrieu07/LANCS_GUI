@@ -21,5 +21,6 @@ setup.ifp
 *.mp4
 *.jpg
 test_*.py
+action
 commit.zip
 venv

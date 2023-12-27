@@ -49,17 +49,12 @@ class PandasModel(QtCore.QAbstractTableModel):
 
             # Define a mapping of original column names to new column names
         column_mapping = {
-            "Total Vehicles": "Tổng phương tiện",
             "Average": "Trung bình",
             "Date": "Ngày",
             "Time": "Giờ",
             "Total": "Tổng số",
             "CAM NAME": "Tên CAMERA",
-            "HEIGHT": "Độ cao CAMERA (m)",
-            "LANE_NUMBER": "Số làn đường",
-            "ZONE": "Mốc KM",
             "COORD": "Toạ độ",
-            "FOCAL_LENGTH": "Tiêu cự CAMERA (mm)",
             "STATUS": "Trạng thái"
             # Add more mappings as needed
         }
@@ -358,12 +353,8 @@ class ViolationTableModel(QtCore.QAbstractTableModel):
 
         # Create the icons_mapping dictionary
         icons_mapping = {
-            "Dừng đỗ xe": ":/Stop/icons/stop.png",
-            "Quá tốc độ": ":/Overspeed/icons/overspeed.png",
-            "Người đi bộ": ":/Person/icons/person.png",
-            "Vật thể lạ": ":/Abnormal/icons/abnormal.png",
-            "Xe máy": ":/No_Motorbike/icons/no_motorbike.png",
-            "Ngược chiều": ":/Opposite_Direction/icons/opposite_direction.png",
+            "Sử dụng điện thoại": ":/Using_Phone/icons/using-phone.png",
+            "Ngủ gật": ":/Sleep/icons/sleep.png",
         }
         self.icons_mapping = (
             icons_mapping  # Dictionary mapping violation type to icon paths
@@ -405,7 +396,6 @@ class ViolationTableModel(QtCore.QAbstractTableModel):
         self.column_mapping = {
             "type": "Loại vi phạm",
             "path": "Ảnh vi phạm",
-            "speed": "Tốc độ đo được",
             "time": "Thời gian vi phạm",
             "location": "Địa điểm"
             # Add more mappings as needed

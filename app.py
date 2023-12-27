@@ -44,7 +44,7 @@ class MainWindow(QtWidgets.QMainWindow):
             # conn = connections.connect(host=f'{text}', port=19530)
             # self.database = db.list_database()
             # print(self.database)
-            client = MongoClient(f"mongodb://{text}:9999", serverSelectionTimeoutMS=5000)
+            client = MongoClient(f"mongodb://10.37.239.102:9999", serverSelectionTimeoutMS=5000)
             self.db = client["vehicles_db"]
             self.db.list_collection_names()
 
@@ -84,10 +84,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
             # Navigation buttons
             self.ui.btnMenu.toggled.connect(self.ui_functions.toggleMenu)
+            self.ui.btnRegisterUserPage.toggled.connect(self.ui_functions.toggleRegister)
             self.ui.btnSetupPage.toggled.connect(self.ui_functions.toggleSetup)
             self.ui.btnLiveStreamPage.toggled.connect(self.ui_functions.toggleLiveStream)
             # self.ui.btnChartPage.toggled.connect(self.ui_functions.toggleChart)
-            # self.ui.btnViolationPage.toggled.connect(self.ui_functions.toggleViolation)
+            self.ui.btnViolationPage.toggled.connect(self.ui_functions.toggleViolation)
             # self.ui.btnSettingPage.toggled.connect(self.ui_functions.toggleSetting)
 
             # Emit data from setup page to livestream page
@@ -109,12 +110,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.btnOpenFile.clicked.connect(self.setup_functions.on_initButtonClicked)
             self.ui.btnExportFile.clicked.connect(self.setup_functions.on_writeExcelClicked)
             self.ui.btnSelectROI.clicked.connect(self.setup_functions.on_selectROI)
-            # self.ui.btnLive.clicked.connect(self.setting_functions.send_setting_data_to_AI)
             self.ui.btnLive.clicked.connect(self.setup_functions.on_LiveStreamClicked)
-
-            # self.ui.SettingExportBtn.clicked.connect(self.setting_functions.on_writeConfigFileClicked)
-            # self.ui.SettingOpenBtn.clicked.connect(self.setting_functions.on_openConfigFileClicked)
-            # self.ui.saveCamCnfWhenRunBtn.clicked.connect(self.setting_functions.send_setting_data_to_AI)
 
             # Change grid layout button in livestream page
             self.ui.btnCompactLS.toggled.connect(self.livestream_funcs.toggleCompactMode)
@@ -131,8 +127,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.tableFieldCB_Vio.currentIndexChanged.connect(self.violation_functions.filterColumnSearch)
             self.ui.tableSearch_Vio.textChanged.connect(self.violation_functions.update_search)
             self.violation_functions.send_display_image_error.connect(self.recv_display_image_error)
-
-            # self.setting_functions.send_setting_table.connect(self.ai_functions.recv_setting_data)
+            
         except errors.ServerSelectionTimeoutError:
             QtWidgets.QMessageBox.critical(self, "ERROR", "Kết nối tới server thất bại!")
         
@@ -165,11 +160,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
-    app_icon = QtGui.QIcon(":/App_Icon/icons/car.png")
+    app_icon = QtGui.QIcon(":/App_Icon/icons/app.ico")
     app.setWindowIcon(app_icon)
     
     window = MainWindow()
-    window.setWindowTitle("VDS")
+    window.setWindowTitle("LANCS")
     window.show()
     
     try:
