@@ -45,7 +45,7 @@ class Consumer(QtCore.QThread):
                 pts = np.array(coord, dtype=np.int32)
                 lst = [tuple(coord[0]) for coord in pts]
                 
-                self.ai.do_object_detection(frame, violation, self.data["ZONE"], self.data["INDEX"], lst)
+                self.ai.do_object_detection(frame)
                 del frame, violation
 
             except Exception:
@@ -68,23 +68,3 @@ class Consumer(QtCore.QThread):
         self.data = data
         self.frame = frame
         self.violation_image = violation_image
-
-    def merge_data(self):
-        cam_index = self.data["INDEX"]
-        if cam_index not in self.merged_data:
-            self.merged_data[cam_index] = {
-                "properties": self.ai.camera_database.get(cam_index, {}).get("properties", {})
-            }
-        else:
-            self.merged_data[cam_index]["properties"].update(self.ai.camera_database.get(cam_index, {}).get("properties", {}))
-
-            # Find duplicate documents based on your criteria (time difference < 60 seconds)
-            documents = list(self.vehicle_database.find())
-            for i, doc1 in enumerate(documents):
-                for doc2 in documents[i + 1:]:
-                    if self.time_difference_less_than_60_seconds(doc1, doc2):
-                        # Delete one of the duplicate documents
-                        self.vehicle_database.delete_one({'_id': doc2['_id']})
-            
-            # Reset the last_reset_time to the current time
-            self.last_reset_time = int(time.time())

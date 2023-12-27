@@ -61,6 +61,7 @@ class Worker(QtCore.QThread):
             if not cap.isOpened():
                 cap.release()
                 self.error_occurred.emit(f"Camera {self.name} không thể mở!")
+                self.reconnect()
                 return
         except cv2.error as e:
             cap.release()
@@ -85,17 +86,17 @@ class Worker(QtCore.QThread):
 
                 self.violation_frame = img.copy()
 
-                current_time = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                text = f"{self.name} {self.zone} {current_time}"
-                cv2.putText(
-                    img,
-                    text,
-                    (50, 50),
-                    fontFace=cv2.FONT_HERSHEY_COMPLEX,
-                    fontScale=1,
-                    color=(255, 0, 0),
-                    thickness=2,
-                )
+                # current_time = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                # text = f"{self.name} {self.zone} {current_time}"
+                # cv2.putText(
+                #     img,
+                #     text,
+                #     (50, 50),
+                #     fontFace=cv2.FONT_HERSHEY_COMPLEX,
+                #     fontScale=1,
+                #     color=(255, 0, 0),
+                #     thickness=2,
+                # )
 
                 pts = np.array(self.coord, dtype=np.int32)
                 frame = cv2.polylines(img, [pts], True, (0, 255, 0), 2)

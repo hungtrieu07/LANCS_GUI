@@ -160,7 +160,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
-    app_icon = QtGui.QIcon(":/App_Icon/icons/car.ico")
+    app_icon = QtGui.QIcon(":/App_Icon/icons/app.ico")
     app.setWindowIcon(app_icon)
     
     window = MainWindow()
