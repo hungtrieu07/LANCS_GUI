@@ -2,6 +2,7 @@ import json
 import time
 from datetime import datetime
 import traceback
+import cv2
 
 import numpy as np
 import pymongo
@@ -15,6 +16,7 @@ merged_json = {}
 class Consumer(QtCore.QThread):
     active_instance = []
     finished = QtCore.pyqtSignal()
+    send_predicted_frame = QtCore.pyqtSignal(np.ndarray)
     
     def __init__(self, parent: QtWidgets.QMainWindow, mutex, wait_condition):
         super().__init__(parent)
@@ -45,8 +47,9 @@ class Consumer(QtCore.QThread):
                 pts = np.array(coord, dtype=np.int32)
                 lst = [tuple(coord[0]) for coord in pts]
                 
-                self.ai.do_object_detection(frame)
-                del frame, violation
+                predicted_frame = self.ai.do_object_detection(frame)
+                self.send_predicted_frame.emit(predicted_frame)
+                # del frame, violation
 
             except Exception:
                 # traceback.print_exc()

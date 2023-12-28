@@ -184,11 +184,15 @@ class LiveStreamGrid(QtWidgets.QWidget):
                                         ignore_obj_name=obj_name_clicked, 
                                         show=False)
             self.cam_managers[obj_name_clicked]['is_window_maximized'] = True
+            self.cam_managers[obj_name_clicked]["cameraWidget"].worker.pause = True
+            self.cam_managers[obj_name_clicked]["consumer"].send_predicted_frame.connect(self.cam_managers[obj_name_clicked]["cameraWidget"].update_frame)
         else:
             self.grid_style.filterWidget(cam_managers=self.cam_managers,
                                         ignore_obj_name=obj_name_clicked, 
                                         show=True)
             self.cam_managers[obj_name_clicked]['is_window_maximized'] = False
+            self.cam_managers[obj_name_clicked]["consumer"].send_predicted_frame.disconnect()
+            self.cam_managers[obj_name_clicked]["cameraWidget"].worker.pause = False
 
         return True
 
